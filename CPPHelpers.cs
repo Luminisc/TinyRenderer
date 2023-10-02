@@ -16,5 +16,12 @@
         {
             Array.Copy(source, soffset, destination, doffset, size);
         }
+
+        public static void Swap<T>(ref T x, ref T y)
+        {
+            T t = x;
+            x = y;
+            y = t;
+        }
     }
 }
