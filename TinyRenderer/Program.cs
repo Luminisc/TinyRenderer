@@ -9,7 +9,7 @@ var image = new TGAImage(100, 100, TGAImage.Format.RGB);
 // lesson0();
 lesson1();
 image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
-image.write_tga_file("output.tga");
+image.write_tga_file("../../../../output.tga");
 
 
 void lesson0()
