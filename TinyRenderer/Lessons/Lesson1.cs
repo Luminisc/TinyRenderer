@@ -3,10 +3,10 @@
     /// <summary>Draw lines and draw wireframe of model</summary>
     internal class Lesson1
     {
-        public static void Run(string filepath, TGAImage image)
+        public static void Run(TGAImage image, string filepath)
         {
             var white = new TGAColor(255, 255, 255, 255);
-            var model = new Model("../../../../african_head.obj");
+            var model = new Model(filepath);
 
             for (var i = 0; i < model.nfaces(); i++)
             {

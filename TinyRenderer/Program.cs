@@ -12,7 +12,7 @@ var image = new TGAImage(width, height, TGAImage.Format.RGB);
 
 var sw = Stopwatch.StartNew();
 // Lesson0.Run(image);
-Lesson1.Run("../../../../african_head.obj", image);
+Lesson1.Run(image, "../../../../african_head.obj");
 
 image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
 Console.WriteLine($"Draw {sw.ElapsedMilliseconds} ms");
