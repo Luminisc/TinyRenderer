@@ -147,10 +147,7 @@ namespace TinyRenderer
             bytespp = img.bytespp;
             var nbytes = width * height * bytespp;
             data = new byte[nbytes];
-            if (img.data != null)
-                CPP.Memcpy(data, img.data, nbytes);
-            else
-                CPP.Memset(data, 0, nbytes);
+            CPP.Memcpy(data, img.data, nbytes);
         }
 
         public TGAImage(int w, int h, Format format) : this(w, h, (int)format) { }
