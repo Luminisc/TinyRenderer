@@ -41,5 +41,56 @@ namespace TinyRenderer
                 }
             }
         }
+
+        public static void Line(Vec2i v0, Vec2i v1, TGAImage image, TGAColor color)
+            => Line(v0.X, v0.Y, v1.X, v1.Y, image, color);
+
+        public static void TriangleWire(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage image, TGAColor color)
+        {
+            Line(t0, t1, image, color);
+            Line(t1, t2, image, color);
+            Line(t2, t0, image, color);
+        }
+
+        public static void Triangle(Vec2i t0, Vec2i t1, Vec2i t2, TGAImage image, TGAColor color)
+        {
+            if (t0.Y > t1.Y) CPP.Swap(ref t0, ref t1);
+            if (t1.Y > t2.Y) CPP.Swap(ref t1, ref t2);
+            if (t0.Y > t1.Y) CPP.Swap(ref t0, ref t1);
+
+            Line(t0, t1, image, TGAColor.Green);
+            Line(t1, t2, image, TGAColor.Blue);
+            Line(t2, t0, image, TGAColor.Red);
+        }
+
+        public static void Triangle(Span<Vec2i> points, TGAImage image, TGAColor color)
+        {
+            if (points[0].Y > points[1].Y) CPP.Swap(ref points[0], ref points[1]);
+            if (points[1].Y > points[2].Y) CPP.Swap(ref points[1], ref points[2]);
+            if (points[0].Y > points[1].Y) CPP.Swap(ref points[0], ref points[1]);
+
+            var bboxmin = new Vec2i(image.Width - 1, image.Height - 1);
+            var bboxmax = new Vec2i(0, 0);
+            var clamp = new Vec2i(image.Width - 1, image.Height - 1);
+            for (int i = 0; i < 3; i++)
+            {
+                bboxmin.X = Max(0, Min(bboxmin.X, points[i].X));
+                bboxmin.Y = Max(0, Min(bboxmin.Y, points[i].Y));
+
+                bboxmax.X = Min(clamp.X, Max(bboxmax.X, points[i].X));
+                bboxmax.Y = Min(clamp.Y, Max(bboxmax.Y, points[i].Y));
+            }
+
+            Vec2i P = new();
+            for (P.X = bboxmin.X; P.X < bboxmax.X; P.X++)
+            {
+                for (P.Y = bboxmin.Y; P.Y < bboxmax.Y; P.Y++)
+                {
+                    var bc_screen = GeometryHelper.Barycentric(points, P);
+                    if (bc_screen.X < 0 || bc_screen.Y < 0 || bc_screen.Z < 0) continue;
+                    image.set(P.X, P.Y, color);
+                }
+            }
+        }
     }
 }

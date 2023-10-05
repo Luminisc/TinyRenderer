@@ -114,6 +114,11 @@ namespace TinyRenderer
         }
 
         // TODO: (something similar to) assign operator override
+
+        public static TGAColor Red => new TGAColor(255, 0, 0, 255);
+        public static TGAColor Green => new TGAColor(0, 255, 0, 255);
+        public static TGAColor Blue => new TGAColor(0, 0, 255, 255);
+        public static TGAColor White => new TGAColor(255, 255, 255, 255);
     }
 
     public class TGAImage

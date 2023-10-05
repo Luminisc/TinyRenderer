@@ -37,6 +37,7 @@ namespace TinyRenderer
 
         public Vec2i() { X = 0; Y = 0; }
         public Vec2i(int _u, int _v) { U = _u; V = _v; }
+        public Vec2i(float _u, float _v) { U = (int)_u; V = (int)_v; }
 
         public static Vec2i operator +(in Vec2i v1, in Vec2i v2) { return new Vec2i(v1.U + v2.U, v1.V + v2.V); }
         public static Vec2i operator -(in Vec2i v1, in Vec2i v2) { return new Vec2i(v1.U - v2.U, v1.V - v2.V); }
