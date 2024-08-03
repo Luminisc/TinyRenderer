@@ -15,7 +15,8 @@ var sw = Stopwatch.StartNew();
 // Lesson1.Run(image, modelPath);
 // Lesson2.Run(image);
 // Lesson2.RunWithModel(image, modelPath);
-Lesson2.RunWithLighting(image, modelPath);
+// Lesson2.RunWithLighting(image, modelPath);
+Lesson3.Run(image, modelPath);
 
 image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
 Console.WriteLine($"Draw {sw.ElapsedMilliseconds} ms");

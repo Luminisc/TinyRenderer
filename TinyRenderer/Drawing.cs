@@ -92,5 +92,42 @@ namespace TinyRenderer
                 }
             }
         }
+
+        public static unsafe void Triangle(Span<Vec3f> world_coords, Span<Vec3f> points, TGAImage image, TGAColor color, float[] zbuffer)
+        {
+            if (points[0].Y > points[1].Y) CPP.Swap(ref points[0], ref points[1]);
+            if (points[1].Y > points[2].Y) CPP.Swap(ref points[1], ref points[2]);
+            if (points[0].Y > points[1].Y) CPP.Swap(ref points[0], ref points[1]);
+
+            var bboxmin = new Vec2f(float.MaxValue, float.MaxValue);
+            var bboxmax = new Vec2f(float.MinValue, float.MinValue);
+            var clamp = new Vec2f(image.Width - 1, image.Height - 1);
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    bboxmin.Raw[j] = Max(0f,            Min(bboxmin.Raw[j], points[i].Raw[j]));
+                    bboxmax.Raw[j] = Min(clamp.Raw[j],  Max(bboxmax.Raw[j], points[i].Raw[j]));
+                }
+            }
+
+            Vec3f P = new();
+            for (P.X = bboxmin.X; P.X < bboxmax.X; P.X++)
+            {
+                for (P.Y = bboxmin.Y; P.Y < bboxmax.Y; P.Y++)
+                {
+                    var bc_screen = GeometryHelper.Barycentric(points, P);
+                    if (bc_screen.X < 0 || bc_screen.Y < 0 || bc_screen.Z < 0) continue;
+                    P.Z = 0;
+                    for (int i = 0; i < 3; i++)
+                        P.Z += points[i].Z * bc_screen.Raw[i];
+                    if (zbuffer[(int)(P.X + P.Y * image.Width)] < P.Z)
+                    {
+                        zbuffer[(int)(P.X + P.Y * image.Width)] = P.Z;
+                        image.set((int)P.X, (int)P.Y, color);
+                    }
+                }
+            }
+        }
     }
 }
